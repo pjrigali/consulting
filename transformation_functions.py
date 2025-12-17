@@ -1,5 +1,6 @@
 import re
 import unicodedata
+import datetime
 
 
 def check_bool(s: str) -> bool:
@@ -26,3 +27,16 @@ def remove_diacritics(input_string: str) -> str:
     """Removes diacritics, strips them from strings. Useful when dealing with str's of different languages."""
     normalized_string = unicodedata.normalize('NFD', input_string)
     return ''.join(c for c in normalized_string if unicodedata.category(c) != 'Mn')
+
+
+def to_datetime(s: str) -> datetime.datetime:
+    """Basic datetime conversions."""
+    if s:
+        if '/' in s:
+            return datetime.datetime.strptime(s, "%m/%d/%Y")
+        elif s.endswith('+0000'):
+            return datetime.datetime.strptime(s, '%Y-%m-%dT%H:%M:%S.%f%z')
+        else:
+            return datetime.datetime.strptime(s, "%Y-%m-%d")
+    else:
+        return None

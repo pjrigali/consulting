@@ -23,10 +23,10 @@ def rsc(t: str) -> str:
     return re.sub(r'[^A-Za-z0-9\s]', '', t)
 
 
-def remove_diacritics(input_string: str) -> str:
+def remove_diacritics(t: str) -> str:
     """Removes diacritics, strips them from strings. Useful when dealing with str's of different languages."""
-    normalized_string = unicodedata.normalize('NFD', input_string)
-    return ''.join(c for c in normalized_string if unicodedata.category(c) != 'Mn')
+    n_t = unicodedata.normalize('NFD', t)
+    return ''.join(c for c in n_t if unicodedata.category(c) != 'Mn')
 
 
 def to_datetime(s: str) -> datetime.datetime:

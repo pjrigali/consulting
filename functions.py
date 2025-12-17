@@ -36,7 +36,9 @@ def save_csv(file_path: str, data: list, sort_columns: bool = False) -> None:
         csv_writer = csv.DictWriter(file, fieldnames=cols, restval='', extrasaction='ignore')        
         csv_writer.writeheader()
         csv_writer.writerows(data)
-    return f'File created: ({file_path})'
+        
+    print(f'File created: ({file_path})')
+    return None
 
 
 # Read in a word doc file.

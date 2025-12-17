@@ -2,6 +2,7 @@ import csv
 import zipfile
 from xml.etree.cElementTree import XML
 from pathlib import Path
+from openpyxl import load_workbook
 
 
 # Read csv's.
@@ -103,3 +104,67 @@ def read_docx(file_path: str) -> str:
         if texts:
             paragraphs.append(''.join(texts))
     return '\n'.join(paragraphs)
+
+
+# Read in an excel file.
+def read_excel(file_path: str, sheet_name: str) -> list:
+    """Reads an xlsx file. Returns a list (workbook) of list (sheets) of dictionaries (rows)."""
+    # Cheating, open the file.
+    wb = load_workbook(filename=file_path, data_only=True, read_only=True)
+
+    # Validate sheet is present, grap list of sheets present.
+    sheets = []
+    if sheet_name:
+        if sheet_name not in wb.sheetnames:
+            try:
+                wb.close()
+            except Exception:
+                pass
+            raise ValueError(f"Sheet '{sheet_name}' not found. Available sheets: {wb.sheetnames}")
+        else:
+            sheets.append(sheet_name)
+    else:
+        sheets = wb.sheetnames
+
+    # Capture the sheets
+    results = []
+    for sheet in sheets:
+        # Grab rows.
+        rows_iter = wb[sheet].iter_rows(values_only=True)
+
+        # Check if the sheet has data, else skip.
+        try:
+            raw_headers = next(rows_iter)
+        except StopIteration:
+            results.append([{}])
+            continue
+
+        # Normalize headers: strings, trimmed; handle None/empty and duplicates
+        seen_counts = {}
+        headers = []
+        for h in raw_headers:
+            base = (str(h).strip() if h is not None else "").strip()
+            if not base:
+                base = "column"
+            if base in seen_counts:
+                seen_counts[base] += 1
+                norm = f"{base}_{seen_counts[base]}"
+            else:
+                seen_counts[base] = 0
+                norm = base
+            headers.append(norm)
+
+        # Parse the sheet.
+        result = []
+        for row in rows_iter:
+            row_dict = {i: None for i in headers}
+            if row is None:
+                result.append(row_dict)
+            else:
+                # Would rather just dict(zip()) but whatever.
+                for idx, key in enumerate(headers):
+                    row_dict[key] = row[idx] if idx < len(row) else None
+                result.append(row_dict)
+        results.append(result)
+    wb.close()
+    return results

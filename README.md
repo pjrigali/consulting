@@ -1,2 +1,2 @@
-# consulting
-Useful functions frequently used in consulting
+# Consulting Functions
+Welcome to The Anti Pandas Python Club. Depenency/library minimum.

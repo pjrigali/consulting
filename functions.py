@@ -39,6 +39,33 @@ def update_file_version(folder_path: str, file_name: str) -> str:
             return str(n_filename)
         n += 1
 
+# Old attempt for version updating.
+# import os
+# import re
+
+# # New function to handle versioning and saving the data
+# def update_file_version(folder_path: str, base_filename: str) -> str:
+#     # Get list of all files in the folder
+#     if folder_path:
+#         files = os.listdir(folder_path)
+#     else:
+#         files = os.listdir()
+   
+#     # Filter out the CSV files
+#     csv_files = [file for file in files if file.endswith('.csv') and file.startswith(base_filename)]
+#     pattern = re.compile(rf"^{re.escape(base_filename)}_v(\d+)\.csv$")
+   
+#     version_numbers = []
+#     for file in csv_files:
+#         match = pattern.match(file)
+#         if match:
+#             version_numbers.append(int(match.group(1)))
+   
+#     # Determine the next version number
+#     next_version = max(version_numbers, default=0) + 1
+
+#     return os.path.join(folder_path, f"{base_filename}_v{next_version}.csv")
+
 
 # Save a list of dictionaries to a csv.
 def save_csv(file_path: str, data: list, sort_columns: bool = False) -> None:

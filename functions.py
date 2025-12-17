@@ -1,6 +1,8 @@
 import csv
 import zipfile
 from xml.etree.cElementTree import XML
+from pathlib import Path
+
 
 # Read csv's.
 def read_csv(path: str, nrows: int = 0) -> list:
@@ -23,6 +25,21 @@ def read_csv(path: str, nrows: int = 0) -> list:
             return [row for row in csv_reader]
 
 
+# Update file version. Useful for creating successive csv outputs.
+def update_file_version(folder_path: str, file_name: str) -> str:
+    """
+    Takes an input folder and file name, returns the next file version. This allow different versioning of files.
+    Nest this in the save_csv(file_path=update_file_version(folder_path='your folder', file_name='your filenanme'), data).
+    """
+    root = Path(folder_path) if folder_path else Path.cwd()
+    n = 1
+    while True:
+        n_filename = root / f'{file_name}_v{n}.csv'
+        if not n_filename.exists():
+            return str(n_filename)
+        n += 1
+
+
 # Save a list of dictionaries to a csv.
 def save_csv(file_path: str, data: list, sort_columns: bool = False) -> None:
     """Takes a list of dictionaries and saves them to a csv. Assumes all the dict's have the same keys."""
@@ -36,7 +53,7 @@ def save_csv(file_path: str, data: list, sort_columns: bool = False) -> None:
         csv_writer = csv.DictWriter(file, fieldnames=cols, restval='', extrasaction='ignore')        
         csv_writer.writeheader()
         csv_writer.writerows(data)
-        
+
     print(f'File created: ({file_path})')
     return None
 

@@ -9,7 +9,7 @@ def read_csv(path: str, nrows: int = 0) -> list:
     if not path.endswith('.csv'):
         path = path + '.csv'
 
-    with open(path, mode='r', encoding='utf-8') as file:
+    with open(path, mode='r', encoding='utf-8-sig') as file:
         csv_reader = csv.DictReader(file)
 
         # Catch and fix key names.
@@ -21,6 +21,22 @@ def read_csv(path: str, nrows: int = 0) -> list:
             return [next(csv_reader) for _ in range(nrows)]
         else:
             return [row for row in csv_reader]
+
+
+# Save a list of dictionaries to a csv.
+def save_csv(file_path: str, data: list, sort_columns: bool = False) -> None:
+    """Takes a list of dictionaries and saves them to a csv. Assumes all the dict's have the same keys."""
+    with open(file_path, mode='w', encoding='utf-8-sig', newline='') as file:
+        # I know, first row? gross.
+        cols = data[0].keys()
+    
+        if sort_columns:
+            cols.sort()
+        
+        csv_writer = csv.DictWriter(file, fieldnames=cols, restval='', extrasaction='ignore')        
+        csv_writer.writeheader()
+        csv_writer.writerows(data)
+    return f'File created: ({file_path})'
 
 
 # Read in a word doc file.

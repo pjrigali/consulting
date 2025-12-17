@@ -18,14 +18,14 @@ def check_bool(s: str) -> bool:
         raise AttributeError(f'Unexpected dataType found ({type(s)}) for ({s}).')
 
 
-def rsc(t: str) -> str:
+def rsc(s: str) -> str:
     """Remove special chars."""
-    return re.sub(r'[^A-Za-z0-9\s]', '', t)
+    return re.sub(r'[^A-Za-z0-9\s]', '', s)
 
 
-def remove_diacritics(t: str) -> str:
+def remove_diacritics(s: str) -> str:
     """Removes diacritics, strips them from strings. Useful when dealing with str's of different languages."""
-    n_t = unicodedata.normalize('NFD', t)
+    n_t = unicodedata.normalize('NFD', s)
     return ''.join(c for c in n_t if unicodedata.category(c) != 'Mn')
 
 

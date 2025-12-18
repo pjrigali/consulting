@@ -11,9 +11,9 @@ def _file(file) -> dict:
     # If CSV, include the columns in the file.
     cols = ()
     if file.suffix == '.csv':
-        lst = read_csv(path=str(file.parent) + '\\' + str(file.name), nrows=1)
+        lst = read_csv(path=str(file.parent) + '\\' + str(file.name), nrows=1, columns=True)
         if lst:
-            cols = tuple(lst[0].keys())
+            cols = tuple(lst)
 
     return {'location': str(file.resolve()), 
             'folder_name': str(file.parent), 

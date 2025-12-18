@@ -21,6 +21,8 @@ def read_csv(path: str, nrows: int = 0) -> list:
         # Catch and fix key names.
         if csv_reader.fieldnames:
             csv_reader.fieldnames = [name.lstrip("\ufeff") for name in csv_reader.fieldnames]
+        else:
+            return [{}] # Empty file, return empty list
 
         # Only read in x lines.
         if nrows:

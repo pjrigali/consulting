@@ -3,10 +3,18 @@ The function details the files within a given folder. Useful for discovering wha
 """
 from pathlib import Path
 import datetime
+from file_handling_functions import read_csv
 
 
 def _file(file) -> dict:
     """Collects file level information. Returns a dictionary."""
+    # If CSV, include the columns in the file.
+    cols = ()
+    if file.suffix == '.csv':
+        lst = read_csv(path=str(file.parent) + '\\' + str(file.name), nrows=1)
+        if lst:
+            cols = tuple(lst[0].keys())
+
     return {'location': str(file.resolve()), 
             'folder_name': str(file.parent), 
             'file_name': file.name, 
@@ -14,7 +22,8 @@ def _file(file) -> dict:
             'file_size': f'{round(file.stat().st_size / (1024 * 1024), 4)} mbs', 
             'dt_access': datetime.datetime.fromtimestamp(file.stat().st_atime), 
             'dt_modified': datetime.datetime.fromtimestamp(file.stat().st_mtime), 
-            'dt_created': datetime.datetime.fromtimestamp(file.stat().st_ctime)}
+            'dt_created': datetime.datetime.fromtimestamp(file.stat().st_ctime),
+            'columns': cols}
 
 
 def _gather(location) -> list:

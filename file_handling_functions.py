@@ -9,7 +9,7 @@ from openpyxl import load_workbook
 
 
 # Read csv's.
-def read_csv(path: str, nrows: int = 0) -> list:
+def read_csv(path: str, nrows: int = 0, columns: bool = False) -> list:
     """Simple csv reader, fixes keys, returns the csv as a list of dicts."""
     # Check if file is a csv.
     if not path.endswith('.csv'):
@@ -21,6 +21,8 @@ def read_csv(path: str, nrows: int = 0) -> list:
         # Catch and fix key names.
         if csv_reader.fieldnames:
             csv_reader.fieldnames = [name.lstrip("\ufeff") for name in csv_reader.fieldnames]
+            if columns:
+                return list(csv_reader.fieldnames)
         else:
             return [{}] # Empty file, return empty list
 

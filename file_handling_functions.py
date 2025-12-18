@@ -1,3 +1,6 @@
+"""
+Functions for reading in different file types.
+"""
 import csv
 import zipfile
 from xml.etree.cElementTree import XML
